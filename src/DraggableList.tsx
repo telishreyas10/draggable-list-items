@@ -15,15 +15,22 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+
+//Depricating icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapPin } from "@fortawesome/free-solid-svg-icons";
 
 // Define the structure of each item
-interface Item {
+export interface Item {
   id: string;
   title: string;
-  location: string;
+  description: string;
   image: string;
+}
+
+// Props for DraggableList
+interface DraggableListProps {
+  items: Item[];
 }
 
 // Define the props for the sortable item component
@@ -37,50 +44,6 @@ interface ItemComponentProps {
   item: Item;
   isOverlay?: boolean;
 }
-
-// List of items
-const items: Item[] = [
-  {
-    id: "1",
-    title: "Scotland Island",
-    location: "Sydney, Australia",
-    image: "https://www.scotland-inverness.co.uk/hebrides-luskentyre-view.jpg",
-  },
-  {
-    id: "2",
-    title: "The Charles Grand Brasserie & Bar",
-    location: "Lorem ipsum, Dolor",
-    image:
-      "https://thecharles.sydney/wp-content/uploads/sites/3/2022/11/Yk53YLBM-scaled.jpeg",
-  },
-  {
-    id: "3",
-    title: "Bridge Climb",
-    location: "Dolor, Sit amet",
-    image:
-      "https://t4.ftcdn.net/jpg/00/67/59/55/360_F_67595591_UDaXLI35Csoqsy37rLiVLjFmkTUdHKhb.jpg",
-  },
-  {
-    id: "4",
-    title: "Scotland Island",
-    location: "Sydney, Australia",
-    image: "https://photos.superyachtapi.com/download/231492/large",
-  },
-  {
-    id: "5",
-    title: "Clam Bar",
-    location: "Etcetera veni, Vidi vici",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyAPBbLvRzjJ1Zh-KfQXfEOVbeA0GkzaORaw&s",
-  },
-  {
-    id: "6",
-    title: "Vivid Festival",
-    location: "Sydney, Australia",
-    image:
-      "https://i1.pickpik.com/photos/687/208/910/surfing-surfboard-man-surf-preview.jpg",
-  },
-];
 
 // Component for each sortable item
 const SortableItem: React.FC<SortableItemProps> = ({ item, overId }) => {
@@ -121,12 +84,14 @@ const SortableItem: React.FC<SortableItemProps> = ({ item, overId }) => {
         <div>
           <h3 className="font-bold font-sans text-black">{item.title}</h3>
           <p className="text-gray-500 font-sans text-sm">
-            <FontAwesomeIcon
+            {/* Removed icon from description  */}
+            {/* <FontAwesomeIcon
               style={{ width: "1em", height: "1em" }}
               icon={faMapPin}
               className="mr-1"
-            />
-            {item.location}
+            /> */}
+
+            {item.description}
           </p>
         </div>
       </div>
@@ -154,7 +119,7 @@ const ItemComponent: React.FC<ItemComponentProps> = ({ item, isOverlay }) => {
 };
 
 // Draggable list component
-const DraggableList: React.FC = () => {
+const DraggableList: React.FC<DraggableListProps> = ({ items }) => {
   const [list, setList] = useState(items);
   const [activeItem, setActiveItem] = useState<Item | null>(null);
   const [overId, setOverId] = useState<UniqueIdentifier | null>(null);
@@ -193,33 +158,44 @@ const DraggableList: React.FC = () => {
   };
 
   return (
-    <DndContext
-      collisionDetection={closestCenter}
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDragEnd={handleDragEnd}
-    >
-      {/* Render items during dragging */}
-      {isDragging ? (
-        <div>
-          {list.map((item) => (
-            <SortableItem key={item.id} item={item} overId={overId} />
-          ))}
+    <div>
+      <main className="flex justify-center items-center min-h-screen">
+        <div className="w-full max-w-md p-4">
+          <DndContext
+            collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnd={handleDragEnd}
+          >
+            {/* Render items during dragging */}
+            {isDragging ? (
+              <div>
+                {list.map((item) => (
+                  <SortableItem key={item.id} item={item} overId={overId} />
+                ))}
+              </div>
+            ) : (
+              // Render items in sortable context
+              <SortableContext
+                items={list}
+                strategy={verticalListSortingStrategy}
+              >
+                <div>
+                  {list.map((item) => (
+                    <SortableItem key={item.id} item={item} overId={overId} />
+                  ))}
+                </div>
+              </SortableContext>
+            )}
+            <DragOverlay dropAnimation={null}>
+              {activeItem ? (
+                <ItemComponent item={activeItem} isOverlay />
+              ) : null}
+            </DragOverlay>
+          </DndContext>
         </div>
-      ) : (
-        // Render items in sortable context
-        <SortableContext items={list} strategy={verticalListSortingStrategy}>
-          <div>
-            {list.map((item) => (
-              <SortableItem key={item.id} item={item} overId={overId} />
-            ))}
-          </div>
-        </SortableContext>
-      )}
-      <DragOverlay dropAnimation={null}>
-        {activeItem ? <ItemComponent item={activeItem} isOverlay /> : null}
-      </DragOverlay>
-    </DndContext>
+      </main>
+    </div>
   );
 };
 

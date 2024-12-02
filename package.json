@@ -1,24 +1,38 @@
 {
   "name": "draggable-list-items",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "A reusable drag-and-drop list component built with React, Next.js, Tailwind CSS, and dnd Kit.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "dist/styles.css"
+  ],
+  "private": false,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build:demo": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:css": "postcss src/styles/tailwind.css -o dist/styles.css",
+  "build": "npm run build:css && tsc",
+    "prepare": "npm run build"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   },
   "dependencies": {
-    "@dnd-kit/core": "^6.1.0",
+    "@dnd-kit/core": "^6.2.0",
     "@dnd-kit/sortable": "^8.0.0",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@hello-pangea/dnd": "^16.6.0",
     "next": "14.2.3",
-    "react": "^18",
+    "react": "^18.0.0",
     "react-beautiful-dnd": "^13.1.1",
-    "react-dom": "^18"
+    "react-dom": "^18.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -29,6 +43,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "postcss": "^8.4.38",
+    "postcss-cli": "^11.0.0",
     "tailwindcss": "^3.4.4",
     "typescript": "^5"
   }
