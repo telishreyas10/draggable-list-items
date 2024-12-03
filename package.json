@@ -15,7 +15,7 @@
     "start": "next start",
     "lint": "next lint",
     "build:css": "postcss src/styles/tailwind.css -o dist/styles.css",
-  "build": "npm run build:css && tsc",
+    "build": "npm run build:css && tsc && next build",
     "prepare": "npm run build"
   },
   "peerDependencies": {
