@@ -1,6 +1,6 @@
 {
   "name": "draggable-list-items",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A reusable drag-and-drop list component built with React, Next.js, Tailwind CSS, and dnd Kit.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
